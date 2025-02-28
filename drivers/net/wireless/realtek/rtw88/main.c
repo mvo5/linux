@@ -2278,6 +2278,12 @@ int rtw_register_hw(struct rtw_dev *rtwdev, struct ieee80211_hw *hw)
 	wiphy_ext_feature_set(hw->wiphy, NL80211_EXT_FEATURE_SCAN_RANDOM_SN);
 	wiphy_ext_feature_set(hw->wiphy, NL80211_EXT_FEATURE_SET_SCAN_DWELL);
 
+	// XXX: put behind a module insmod flag of config option?
+	if (rtwdev->chip->id == RTW_CHIP_TYPE_8821C) {
+		hw->wiphy->software_iftypes |= BIT(NL80211_IFTYPE_MONITOR);
+		hw->wiphy->interface_modes |= BIT(NL80211_IFTYPE_MONITOR);
+	}
+
 #ifdef CONFIG_PM
 	hw->wiphy->wowlan = rtwdev->chip->wowlan_stub;
 	hw->wiphy->max_sched_scan_ssids = rtwdev->chip->max_sched_scan_ssids;
